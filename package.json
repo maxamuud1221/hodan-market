@@ -1,4 +1,4 @@
-{
+{"@supabase/supabase-js": "^2.45.0",
   "name": "suuq-soomaali",
   "private": true,
   "version": "0.0.1",
