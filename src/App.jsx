@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
-import './App.css'
-
+import './index.css'
 function App() {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
