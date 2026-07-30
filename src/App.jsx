@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import './index.css'
+
 function App() {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [activeCategory, setActiveCategory] = useState('Dhammaan')
 
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
@@ -13,6 +15,8 @@ function App() {
   const [category, setCategory] = useState('')
   const [sellerName, setSellerName] = useState('')
   const [imageFile, setImageFile] = useState(null)
+
+  const categories = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
 
   useEffect(() => {
     fetchListings()
@@ -89,6 +93,11 @@ function App() {
     setUploading(false)
   }
 
+  const filteredListings =
+    activeCategory === 'Dhammaan'
+      ? listings
+      : listings.filter((item) => item.category === activeCategory)
+
   return (
     <div className="app">
       <header className="header">
@@ -98,6 +107,18 @@ function App() {
           {showForm ? 'Xir' : '+ Ku dar Alaab'}
         </button>
       </header>
+
+      <div className="category-filters">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={activeCategory === cat ? 'category-btn active' : 'category-btn'}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
       {showForm && (
         <form onSubmit={handleAddListing} className="listing-form">
@@ -115,12 +136,12 @@ function App() {
             onChange={(e) => setPrice(e.target.value)}
             required
           />
-          <input
-            type="text"
-            placeholder="Qaybta (tusaale: Dharka, Elektaroonig)"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
+          <select value={category} onChange={(e) => setCategory(e.target.value)} required>
+            <option value="">Dooro qaybta</option>
+            {categories.filter((c) => c !== 'Dhammaan').map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
           <textarea
             placeholder="Sharaxaad"
             value={description}
@@ -146,10 +167,10 @@ function App() {
       <div className="listings-grid">
         {loading ? (
           <p>Waa la soo raraya...</p>
-        ) : listings.length === 0 ? (
-          <p>Alaab lama helin. Noqo kii ugu horreeya ee wax iibiya!</p>
+        ) : filteredListings.length === 0 ? (
+          <p>Alaab lama helin qaybtan.</p>
         ) : (
-          listings.map((item) => (
+          filteredListings.map((item) => (
             <div key={item.id} className="listing-card">
               {item.image_url && <img src={item.image_url} alt={item.title} />}
               <h3>{item.title}</h3>
