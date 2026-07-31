@@ -70,6 +70,7 @@ function App() {
   const [showForm, setShowForm] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [activeCategory, setActiveCategory] = useState('Dhammaan')
+  const [searchQuery, setSearchQuery] = useState('')
  
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
@@ -177,10 +178,13 @@ function App() {
     await supabase.auth.signOut()
   }
  
-  const filteredListings =
-    activeCategory === 'Dhammaan'
-      ? listings
-      : listings.filter((item) => item.category === activeCategory)
+  const filteredListings = listings
+    .filter((item) =>
+      activeCategory === 'Dhammaan' ? true : item.category === activeCategory
+    )
+    .filter((item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
  
   if (checkingSession) {
     return <p style={{ textAlign: 'center', marginTop: 60 }}>{t.loading}</p>
@@ -194,7 +198,13 @@ function App() {
     <div className="app">
       <header className="header">
         <h1>{t.appName}</h1>
-        <input type="text" placeholder={t.search} className="search-bar" />
+        <input
+          type="text"
+          placeholder={t.search}
+          className="search-bar"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <button
           onClick={() => setLang(lang === 'so' ? 'en' : 'so')}
           className="add-btn"
@@ -288,3 +298,4 @@ function App() {
 }
  
 export default App
+ 
