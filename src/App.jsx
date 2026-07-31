@@ -2,56 +2,114 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import Auth from './Auth'
 import './index.css'
-
+ 
+const translations = {
+  so: {
+    appName: 'Hodan Market',
+    loading: 'Waa la sugayaa...',
+    search: 'Raadi wax...',
+    close: 'Xir',
+    addItem: '+ Ku dar Alaab',
+    logout: 'Ka Bax',
+    itemTitle: 'Magaca alaabta',
+    price: 'Qiimaha',
+    chooseCategory: 'Dooro qaybta',
+    description: 'Sharaxaad',
+    sellerName: 'Magacaaga (iibiyaha)',
+    submitting: 'Waa la shubayaa...',
+    submit: 'Ku dar Alaabta',
+    loadingListings: 'Waa la soo raraya...',
+    noListings: 'Alaab lama helin qaybtan.',
+    seller: 'Iibiyaha',
+    categories: {
+      Dhammaan: 'Dhammaan',
+      Baabuur: 'Baabuur',
+      Moobiil: 'Moobiil',
+      Guryo: 'Guryo',
+      Dharka: 'Dharka',
+      Kale: 'Kale',
+    },
+  },
+  en: {
+    appName: 'Hodan Market',
+    loading: 'Loading...',
+    search: 'Search...',
+    close: 'Close',
+    addItem: '+ Add Item',
+    logout: 'Log Out',
+    itemTitle: 'Item name',
+    price: 'Price',
+    chooseCategory: 'Choose category',
+    description: 'Description',
+    sellerName: 'Your name (seller)',
+    submitting: 'Uploading...',
+    submit: 'Add Item',
+    loadingListings: 'Loading...',
+    noListings: 'No items found in this category.',
+    seller: 'Seller',
+    categories: {
+      Dhammaan: 'All',
+      Baabuur: 'Vehicles',
+      Moobiil: 'Mobile',
+      Guryo: 'Housing',
+      Dharka: 'Clothing',
+      Kale: 'Other',
+    },
+  },
+}
+ 
 function App() {
   const [session, setSession] = useState(null)
   const [checkingSession, setCheckingSession] = useState(true)
-
+ 
+  const [lang, setLang] = useState('so')
+  const t = translations[lang]
+ 
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [activeCategory, setActiveCategory] = useState('Dhammaan')
-
+ 
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [sellerName, setSellerName] = useState('')
   const [imageFile, setImageFile] = useState(null)
-
-  const categories = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
-
+ 
+  const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
+ 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setCheckingSession(false)
     })
-
+ 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
-
+ 
     return () => listener.subscription.unsubscribe()
   }, [])
-
+ 
   useEffect(() => {
     fetchListings()
   }, [])
-
+ 
   useEffect(() => {
     if (session?.user?.email) {
       setSellerName(session.user.email)
     }
   }, [session])
-
+ 
   async function fetchListings() {
     setLoading(true)
     const { data, error } = await supabase
       .from('listings')
       .select('*')
       .order('created_at', { ascending: false })
-
+ 
     if (error) {
       console.error('Error fetching listings:', error)
     } else {
@@ -59,34 +117,34 @@ function App() {
     }
     setLoading(false)
   }
-
+ 
   async function handleAddListing(e) {
     e.preventDefault()
     setUploading(true)
-
+ 
     let imageUrl = ''
-
+ 
     if (imageFile) {
       const fileExt = imageFile.name.split('.').pop()
       const fileName = `${Date.now()}.${fileExt}`
-
+ 
       const { error: uploadError } = await supabase.storage
         .from('listing-images')
         .upload(fileName, imageFile)
-
+ 
       if (uploadError) {
         console.error('Error uploading image:', uploadError)
         setUploading(false)
         return
       }
-
+ 
       const { data: urlData } = supabase.storage
         .from('listing-images')
         .getPublicUrl(fileName)
-
+ 
       imageUrl = urlData.publicUrl
     }
-
+ 
     const { error: insertError } = await supabase
       .from('listings')
       .insert([
@@ -99,7 +157,7 @@ function App() {
           image_url: imageUrl,
         },
       ])
-
+ 
     if (insertError) {
       console.error('Error adding listing:', insertError)
     } else {
@@ -111,82 +169,89 @@ function App() {
       setShowForm(false)
       fetchListings()
     }
-
+ 
     setUploading(false)
   }
-
+ 
   async function handleLogout() {
     await supabase.auth.signOut()
   }
-
+ 
   const filteredListings =
     activeCategory === 'Dhammaan'
       ? listings
       : listings.filter((item) => item.category === activeCategory)
-
+ 
   if (checkingSession) {
-    return <p style={{ textAlign: 'center', marginTop: 60 }}>Waa la sugayaa...</p>
+    return <p style={{ textAlign: 'center', marginTop: 60 }}>{t.loading}</p>
   }
-
+ 
   if (!session) {
     return <Auth onLogin={(user) => setSession({ user })} />
   }
-
+ 
   return (
     <div className="app">
       <header className="header">
-        <h1>SuuqSoomaali</h1>
-        <input type="text" placeholder="Raadi wax..." className="search-bar" />
+        <h1>{t.appName}</h1>
+        <input type="text" placeholder={t.search} className="search-bar" />
+        <button
+          onClick={() => setLang(lang === 'so' ? 'en' : 'so')}
+          className="add-btn"
+          style={{ marginLeft: 8 }}
+        >
+          {lang === 'so' ? 'EN' : 'SO'}
+        </button>
         <button onClick={() => setShowForm(!showForm)} className="add-btn">
-          {showForm ? 'Xir' : '+ Ku dar Alaab'}
+          {showForm ? t.close : t.addItem}
         </button>
         <button onClick={handleLogout} className="add-btn" style={{ marginLeft: 8 }}>
-          Ka Bax ({session.user.email})
+          {t.logout} ({session.user.email})
         </button>
       </header>
-
+ 
       <div className="category-filters">
-        {categories.map((cat) => (
+        {categoryKeys.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             className={activeCategory === cat ? 'category-btn active' : 'category-btn'}
           >
-            {cat}
+            {t.categories[cat]}
           </button>
         ))}
       </div>
-
+ 
       {showForm && (
         <form onSubmit={handleAddListing} className="listing-form">
           <input
             type="text"
-            placeholder="Magaca alaabta"
+            placeholder={t.itemTitle}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
           <input
             type="number"
-            placeholder="Qiimaha"
+            placeholder={t.price}
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
           />
           <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-            <option value="">Dooro qaybta</option>
-            {categories.filter((c) => c !== 'Dhammaan').map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+            <option value="">{t.chooseCategory}</option>
+            {categoryKeys.filter((c) => c !== 'Dhammaan').map((cat) => (
+              <option key={cat} value={cat}>{t.categories[cat]}</option>
             ))}
           </select>
           <textarea
-            placeholder="Sharaxaad"
+            placeholder={t.description}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Magacaaga (iibiyaha)"
+            placeholder={t.sellerName}
             value={sellerName}
             onChange={(e) => setSellerName(e.target.value)}
           />
@@ -196,16 +261,16 @@ function App() {
             onChange={(e) => setImageFile(e.target.files[0])}
           />
           <button type="submit" disabled={uploading}>
-            {uploading ? 'Waa la shubayaa...' : 'Ku dar Alaabta'}
+            {uploading ? t.submitting : t.submit}
           </button>
         </form>
       )}
-
+ 
       <div className="listings-grid">
         {loading ? (
-          <p>Waa la soo raraya...</p>
+          <p>{t.loadingListings}</p>
         ) : filteredListings.length === 0 ? (
-          <p>Alaab lama helin qaybtan.</p>
+          <p>{t.noListings}</p>
         ) : (
           filteredListings.map((item) => (
             <div key={item.id} className="listing-card">
@@ -213,7 +278,7 @@ function App() {
               <h3>{item.title}</h3>
               <p className="price">${item.price}</p>
               <p>{item.description}</p>
-              <p className="seller">Iibiyaha: {item.seller_name}</p>
+              <p className="seller">{t.seller}: {item.seller_name}</p>
             </div>
           ))
         )}
@@ -221,5 +286,5 @@ function App() {
     </div>
   )
 }
-
+ 
 export default App
