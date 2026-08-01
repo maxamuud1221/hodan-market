@@ -16,11 +16,14 @@ const translations = {
     chooseCategory: 'Dooro qaybta',
     description: 'Sharaxaad',
     sellerName: 'Magacaaga (iibiyaha)',
+    sellerPhone: 'Lambarka WhatsApp',
     submitting: 'Waa la shubayaa...',
     submit: 'Ku dar Alaabta',
     loadingListings: 'Waa la soo raraya...',
     noListings: 'Alaab lama helin qaybtan.',
     seller: 'Iibiyaha',
+    backToListings: '← Dib ugu noqo',
+    contactSeller: 'La xiriir Iibiyaha (WhatsApp)',
     categories: {
       Dhammaan: 'Dhammaan',
       Baabuur: 'Baabuur',
@@ -42,11 +45,14 @@ const translations = {
     chooseCategory: 'Choose category',
     description: 'Description',
     sellerName: 'Your name (seller)',
+    sellerPhone: 'WhatsApp number',
     submitting: 'Uploading...',
     submit: 'Add Item',
     loadingListings: 'Loading...',
     noListings: 'No items found in this category.',
     seller: 'Seller',
+    backToListings: '← Back to listings',
+    contactSeller: 'Contact Seller (WhatsApp)',
     categories: {
       Dhammaan: 'All',
       Baabuur: 'Vehicles',
@@ -77,7 +83,9 @@ function App() {
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [sellerName, setSellerName] = useState('')
+  const [sellerPhone, setSellerPhone] = useState('')
   const [imageFile, setImageFile] = useState(null)
+  const [selectedListing, setSelectedListing] = useState(null)
  
   const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
  
@@ -155,6 +163,7 @@ function App() {
           description,
           category,
           seller_name: sellerName,
+          seller_phone: sellerPhone,
           image_url: imageUrl,
         },
       ])
@@ -166,6 +175,7 @@ function App() {
       setPrice('')
       setDescription('')
       setCategory('')
+      setSellerPhone('')
       setImageFile(null)
       setShowForm(false)
       fetchListings()
@@ -192,6 +202,39 @@ function App() {
  
   if (!session) {
     return <Auth onLogin={(user) => setSession({ user })} />
+  }
+ 
+  if (selectedListing) {
+    const item = selectedListing
+    const cleanPhone = (item.seller_phone || '').replace(/[^0-9]/g, '')
+    return (
+      <div className="app">
+        <header className="header">
+          <h1>{t.appName}</h1>
+        </header>
+        <button onClick={() => setSelectedListing(null)} className="add-btn" style={{ margin: '12px' }}>
+          {t.backToListings}
+        </button>
+        <div className="listing-card" style={{ maxWidth: 500, margin: '0 auto' }}>
+          {item.image_url && <img src={item.image_url} alt={item.title} />}
+          <h3>{item.title}</h3>
+          <p className="price">${item.price}</p>
+          <p>{item.description}</p>
+          <p className="seller">{t.seller}: {item.seller_name}</p>
+          {cleanPhone && (
+            <a
+              href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent('Salaan, waxaan ka xiisaynayaa: ' + item.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="add-btn"
+              style={{ display: 'inline-block', marginTop: 12, textDecoration: 'none' }}
+            >
+              {t.contactSeller}
+            </a>
+          )}
+        </div>
+      </div>
+    )
   }
  
   return (
@@ -266,6 +309,13 @@ function App() {
             onChange={(e) => setSellerName(e.target.value)}
           />
           <input
+            type="tel"
+            placeholder={t.sellerPhone}
+            value={sellerPhone}
+            onChange={(e) => setSellerPhone(e.target.value)}
+            required
+          />
+          <input
             type="file"
             accept="image/*"
             onChange={(e) => setImageFile(e.target.files[0])}
@@ -283,7 +333,12 @@ function App() {
           <p>{t.noListings}</p>
         ) : (
           filteredListings.map((item) => (
-            <div key={item.id} className="listing-card">
+            <div
+              key={item.id}
+              className="listing-card"
+              onClick={() => setSelectedListing(item)}
+              style={{ cursor: 'pointer' }}
+            >
               {item.image_url && <img src={item.image_url} alt={item.title} />}
               <h3>{item.title}</h3>
               <p className="price">${item.price}</p>
