@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 * {
@@ -316,4 +317,73 @@ body {
 
 .listing-card a.add-btn:hover {
   background: #22c15e;
+}
+
+/* ---------- Mobile responsive ---------- */
+@media (max-width: 600px) {
+  .header {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    width: 100%;
+  }
+
+  .search-bar {
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .add-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .category-filters {
+    padding: 10px 14px;
+  }
+
+  .category-btn {
+    font-size: 12px;
+    padding: 7px 12px;
+  }
+
+  .listing-form {
+    margin: 12px;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .listing-card img {
+    height: 110px;
+  }
+
+  .listing-card h3 {
+    font-size: 13px;
+    margin: 8px 10px 3px;
+  }
+
+  .listing-card p {
+    font-size: 12px;
+    margin: 0 10px 8px;
+  }
+
+  .listing-card .price {
+    font-size: 12px;
+    margin: 6px 10px 4px;
+    padding: 3px 8px;
+  }
+
+  .listing-card .seller {
+    font-size: 11px;
+    margin: 0 10px 10px;
+  }
 }
