@@ -24,6 +24,9 @@ const translations = {
     seller: 'Iibiyaha',
     backToListings: '← Dib ugu noqo',
     contactSeller: 'La xiriir Iibiyaha (WhatsApp)',
+    deleteListing: 'Tirtir Alaabta',
+    deleteConfirm: 'Ma hubtaa inaad tirtirto alaabtan?',
+    deleting: 'Waa la tirtirayaa...',
     categories: {
       Dhammaan: 'Dhammaan',
       Baabuur: 'Baabuur',
@@ -53,6 +56,9 @@ const translations = {
     seller: 'Seller',
     backToListings: '← Back to listings',
     contactSeller: 'Contact Seller (WhatsApp)',
+    deleteListing: 'Delete Item',
+    deleteConfirm: 'Are you sure you want to delete this item?',
+    deleting: 'Deleting...',
     categories: {
       Dhammaan: 'All',
       Baabuur: 'Vehicles',
@@ -86,6 +92,7 @@ function App() {
   const [sellerPhone, setSellerPhone] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [selectedListing, setSelectedListing] = useState(null)
+  const [deleting, setDeleting] = useState(false)
  
   const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
  
@@ -188,6 +195,19 @@ function App() {
     await supabase.auth.signOut()
   }
  
+  async function handleDeleteListing(id) {
+    if (!window.confirm(t.deleteConfirm)) return
+    setDeleting(true)
+    const { error } = await supabase.from('listings').delete().eq('id', id)
+    if (error) {
+      console.error('Error deleting listing:', error)
+    } else {
+      setSelectedListing(null)
+      fetchListings()
+    }
+    setDeleting(false)
+  }
+ 
   const filteredListings = listings
     .filter((item) =>
       activeCategory === 'Dhammaan' ? true : item.category === activeCategory
@@ -231,6 +251,16 @@ function App() {
             >
               {t.contactSeller}
             </a>
+          )}
+          {session.user.email === item.seller_name && (
+            <button
+              onClick={() => handleDeleteListing(item.id)}
+              disabled={deleting}
+              className="add-btn"
+              style={{ display: 'block', marginTop: 12 }}
+            >
+              {deleting ? t.deleting : t.deleteListing}
+            </button>
           )}
         </div>
       </div>
