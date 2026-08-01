@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import Auth from './Auth'
 import './index.css'
- 
+
 const translations = {
   so: {
     appName: 'Hodan Market',
@@ -69,21 +69,21 @@ const translations = {
     },
   },
 }
- 
+
 function App() {
   const [session, setSession] = useState(null)
   const [checkingSession, setCheckingSession] = useState(true)
- 
+
   const [lang, setLang] = useState('so')
   const t = translations[lang]
- 
+
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [activeCategory, setActiveCategory] = useState('Dhammaan')
   const [searchQuery, setSearchQuery] = useState('')
- 
+
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
@@ -93,39 +93,40 @@ function App() {
   const [imageFile, setImageFile] = useState(null)
   const [selectedListing, setSelectedListing] = useState(null)
   const [deleting, setDeleting] = useState(false)
- 
+  const [showUserMenu, setShowUserMenu] = useState(false)
+
   const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
- 
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setCheckingSession(false)
     })
- 
+
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
- 
+
     return () => listener.subscription.unsubscribe()
   }, [])
- 
+
   useEffect(() => {
     fetchListings()
   }, [])
- 
+
   useEffect(() => {
     if (session?.user?.email) {
       setSellerName(session.user.email)
     }
   }, [session])
- 
+
   async function fetchListings() {
     setLoading(true)
     const { data, error } = await supabase
       .from('listings')
       .select('*')
       .order('created_at', { ascending: false })
- 
+
     if (error) {
       console.error('Error fetching listings:', error)
     } else {
@@ -133,34 +134,34 @@ function App() {
     }
     setLoading(false)
   }
- 
+
   async function handleAddListing(e) {
     e.preventDefault()
     setUploading(true)
- 
+
     let imageUrl = ''
- 
+
     if (imageFile) {
       const fileExt = imageFile.name.split('.').pop()
       const fileName = `${Date.now()}.${fileExt}`
- 
+
       const { error: uploadError } = await supabase.storage
         .from('listing-images')
         .upload(fileName, imageFile)
- 
+
       if (uploadError) {
         console.error('Error uploading image:', uploadError)
         setUploading(false)
         return
       }
- 
+
       const { data: urlData } = supabase.storage
         .from('listing-images')
         .getPublicUrl(fileName)
- 
+
       imageUrl = urlData.publicUrl
     }
- 
+
     const { error: insertError } = await supabase
       .from('listings')
       .insert([
@@ -174,7 +175,7 @@ function App() {
           image_url: imageUrl,
         },
       ])
- 
+
     if (insertError) {
       console.error('Error adding listing:', insertError)
     } else {
@@ -187,14 +188,14 @@ function App() {
       setShowForm(false)
       fetchListings()
     }
- 
+
     setUploading(false)
   }
- 
+
   async function handleLogout() {
     await supabase.auth.signOut()
   }
- 
+
   async function handleDeleteListing(id) {
     if (!window.confirm(t.deleteConfirm)) return
     setDeleting(true)
@@ -207,7 +208,7 @@ function App() {
     }
     setDeleting(false)
   }
- 
+
   const filteredListings = listings
     .filter((item) =>
       activeCategory === 'Dhammaan' ? true : item.category === activeCategory
@@ -215,15 +216,15 @@ function App() {
     .filter((item) =>
       item.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
- 
+
   if (checkingSession) {
     return <p style={{ textAlign: 'center', marginTop: 60 }}>{t.loading}</p>
   }
- 
+
   if (!session) {
     return <Auth onLogin={(user) => setSession({ user })} />
   }
- 
+
   if (selectedListing) {
     const item = selectedListing
     const cleanPhone = (item.seller_phone || '').replace(/[^0-9]/g, '')
@@ -266,7 +267,7 @@ function App() {
       </div>
     )
   }
- 
+
   return (
     <div className="app">
       <header className="header">
@@ -288,11 +289,24 @@ function App() {
         <button onClick={() => setShowForm(!showForm)} className="add-btn">
           {showForm ? t.close : t.addItem}
         </button>
-        <button onClick={handleLogout} className="add-btn" style={{ marginLeft: 8 }}>
-          {t.logout} ({session.user.email})
-        </button>
+        <div className="user-menu">
+          <button
+            className="user-avatar"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            {session.user.email.charAt(0).toUpperCase()}
+          </button>
+          {showUserMenu && (
+            <div className="user-dropdown">
+              <p className="user-email">{session.user.email}</p>
+              <button onClick={handleLogout} className="user-logout-btn">
+                {t.logout}
+              </button>
+            </div>
+          )}
+        </div>
       </header>
- 
+
       <div className="category-filters">
         {categoryKeys.map((cat) => (
           <button
@@ -304,7 +318,7 @@ function App() {
           </button>
         ))}
       </div>
- 
+
       {showForm && (
         <form onSubmit={handleAddListing} className="listing-form">
           <input
@@ -355,7 +369,7 @@ function App() {
           </button>
         </form>
       )}
- 
+
       <div className="listings-grid">
         {loading ? (
           <p>{t.loadingListings}</p>
@@ -381,6 +395,5 @@ function App() {
     </div>
   )
 }
- 
+
 export default App
- 
