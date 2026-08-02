@@ -9,7 +9,7 @@ const authText = {
     email: 'Email',
     password: 'Password',
     signIn: 'Soo Gal',
-    signUp: 'Diiwaan Geli',
+    signUp: 'is Diiwaan Geli',
     submitting: 'Sugaya...',
     noAccount: 'Ma lihid account?',
     hasAccount: 'Horey ma u lahayd account?',
