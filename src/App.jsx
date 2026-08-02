@@ -191,7 +191,7 @@ function App() {
 
     setUploading(false)
   }
-
+return <Auth onLogin={(user) => setSession({ user })} lang={lang} setLang={setLang} />
   async function handleLogout() {
     await supabase.auth.signOut()
   }
