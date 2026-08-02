@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { supabase } from './supabaseClient'
 
@@ -12,7 +13,6 @@ export default function Auth({ onLogin }) {
     e.preventDefault()
     setLoading(true)
     setMessage('')
-
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({ email, password })
       if (error) {
@@ -32,45 +32,60 @@ export default function Auth({ onLogin }) {
   }
 
   return (
-    <div style={{ maxWidth: 350, margin: '60px auto', padding: 20 }}>
-      <h2>{isSignUp ? 'Diiwaangelin' : 'Soo Gal'}</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: '100%', padding: 8 }}
-          />
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-logo">
+          <span className="auth-logo-badge">H</span>
+          <h1>Hodan Market</h1>
         </div>
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            style={{ width: '100%', padding: 8 }}
-          />
-        </div>
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: 10 }}>
-          {loading ? 'Sugaya...' : isSignUp ? 'Diiwaan Geli' : 'Soo Gal'}
-        </button>
-      </form>
-      {message && <p style={{ marginTop: 10, color: message.startsWith('Khalad') ? 'red' : 'green' }}>{message}</p>}
-      <p style={{ marginTop: 15, textAlign: 'center' }}>
-        {isSignUp ? 'Horey ma u lahayd account?' : 'Ma lihid account?'}{' '}
-        <button
-          type="button"
-          onClick={() => { setIsSignUp(!isSignUp); setMessage('') }}
-          style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-        >
-          {isSignUp ? 'Soo Gal' : 'Diiwaan Geli'}
-        </button>
-      </p>
+        <p className="auth-subtitle">
+          {isSignUp ? 'Samee account cusub si aad u iibiso oo aad u iibsato' : 'Ku soo dhawoow, soo gal si aad u sii wadato'}
+        </p>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-field">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="tusaale@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="auth-field">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+            />
+          </div>
+          <button type="submit" disabled={loading} className="auth-submit-btn">
+            {loading ? 'Sugaya...' : isSignUp ? 'Diiwaan Geli' : 'Soo Gal'}
+          </button>
+        </form>
+
+        {message && (
+          <p className={message.startsWith('Khalad') ? 'auth-message auth-error' : 'auth-message auth-success'}>
+            {message}
+          </p>
+        )}
+
+        <p className="auth-toggle">
+          {isSignUp ? 'Horey ma u lahayd account?' : 'Ma lihid account?'}{' '}
+          <button
+            type="button"
+            onClick={() => { setIsSignUp(!isSignUp); setMessage('') }}
+            className="auth-toggle-btn"
+          >
+            {isSignUp ? 'Soo Gal' : 'Diiwaan Geli'}
+          </button>
+        </p>
+      </div>
     </div>
   )
 }
