@@ -311,7 +311,7 @@ function App() {
     <h2>🇸🇴 Suuqa ugu weyn Soomaaliya</h2>
 
     <p>
-      Ka iibso oo ka iibi alaabtaada si fudud, ammaan ah, oo degdeg ah.
+      Ka iibso oo ku iibi alaabtaada si fudud, ammaan ah, oo degdeg ah.
     </p>
 
     <button
