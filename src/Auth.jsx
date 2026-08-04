@@ -32,8 +32,7 @@ const authText = {
 }
 
 export default function Auth({ onLogin, lang, setLang }) {
-  const t = authText[lang]
-
+  const t = authText[lang] || authText.so
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
