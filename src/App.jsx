@@ -306,7 +306,22 @@ function App() {
           )}
         </div>
       </header>
+<section className="hero">
+  <div className="hero-content">
+    <h2>🇸🇴 Suuqa ugu weyn Soomaaliya</h2>
 
+    <p>
+      Ka iibso oo ka iibi alaabtaada si fudud, ammaan ah, oo degdeg ah.
+    </p>
+
+    <button
+      className="hero-btn"
+      onClick={() => setShowForm(true)}
+    >
+      🚀 Ku dar Alaab Hadda
+    </button>
+  </div>
+</section>
       <div className="category-filters">
         {categoryKeys.map((cat) => (
           <button
