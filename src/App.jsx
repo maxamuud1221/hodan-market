@@ -240,8 +240,16 @@ function App() {
           {item.image_url && <img src={item.image_url} alt={item.title} />}
           <h3>{item.title}</h3>
           <p className="price">${item.price}</p>
-          <p>{item.description}</p>
-          <p className="seller">{t.seller}: {item.seller_name}</p>
+
+<p style={{padding:"0 15px",color:"#374151"}}>
+  {item.description}
+</p>
+
+<p className="seller">
+📍 Soomaaliya
+<br/>
+👤 {item.seller_name}
+</p>
           {cleanPhone && (
             <a
               href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent('Salaan, waxaan ka xiisaynayaa: ' + item.title)}`}
