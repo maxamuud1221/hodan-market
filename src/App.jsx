@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import Auth from './Auth'
@@ -73,7 +74,6 @@ const translations = {
 function App() {
   const [session, setSession] = useState(null)
   const [checkingSession, setCheckingSession] = useState(true)
-
   const [lang, setLang] = useState('so')
   const t = translations[lang]
 
@@ -91,6 +91,7 @@ function App() {
   const [sellerName, setSellerName] = useState('')
   const [sellerPhone, setSellerPhone] = useState('')
   const [imageFile, setImageFile] = useState(null)
+
   const [selectedListing, setSelectedListing] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -191,7 +192,7 @@ function App() {
 
     setUploading(false)
   }
-return <Auth onLogin={(user) => setSession({ user })} lang={lang} setLang={setLang} />
+
   async function handleLogout() {
     await supabase.auth.signOut()
   }
