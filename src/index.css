@@ -192,3 +192,42 @@ grid-template-columns:1fr;
 }
 
 }
+.logo{
+display:flex;
+flex-direction:column;
+}
+
+.logo h1{
+font-size:30px;
+font-weight:800;
+color:#2563eb;
+margin:0;
+}
+
+.logo span{
+font-size:13px;
+color:#6b7280;
+margin-top:3px;
+}
+
+.header-actions{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.lang-btn{
+background:white;
+color:#2563eb;
+border:2px solid #2563eb;
+padding:10px 16px;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+transition:.3s;
+}
+
+.lang-btn:hover{
+background:#2563eb;
+color:white;
+}
