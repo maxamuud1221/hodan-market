@@ -89,6 +89,7 @@ function App() {
   const [category, setCategory] = useState('')
   const [sellerName, setSellerName] = useState('')
   const [sellerPhone, setSellerPhone] = useState('')
+  const [city, setCity] = useState('')
   const [imageFile, setImageFile] = useState(null)
 
   const [selectedListing, setSelectedListing] = useState(null)
