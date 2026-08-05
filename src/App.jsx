@@ -407,10 +407,25 @@ function App() {
               style={{ cursor: 'pointer' }}
             >
               {item.image_url && <img src={item.image_url} alt={item.title} />}
-              <h3>{item.title}</h3>
-              <p className="price">${item.price}</p>
-              <p>{item.description}</p>
-              <p className="seller">{t.seller}: {item.seller_name}</p>
+             <h3>{item.title}</h3>
+
+<p className="price">$ {item.price}</p>
+
+<p className="listing-location">📍 Soomaaliya</p>
+
+<p className="listing-description">
+  {item.description.length > 70
+    ? item.description.substring(0, 70) + "..."
+    : item.description}
+</p>
+
+<p className="seller">
+👤 {item.seller_name}
+</p>
+
+<button className="view-btn">
+Faahfaahin
+</button>
             </div>
           ))
         )}
