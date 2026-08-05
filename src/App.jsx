@@ -97,7 +97,22 @@ function App() {
   const [showUserMenu, setShowUserMenu] = useState(false)
 
   const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
-
+  const cities = [
+  'Muqdisho',
+  'Hargeisa',
+  'Boosaaso',
+  'Kismaayo',
+  'Baydhabo',
+  'Garowe',
+  'Burco',
+  'Galkacyo',
+  'Jowhar',
+  'Beledweyne',
+  'Marka',
+  'Dhuusamareeb',
+  'Laascaanood',
+  'Ceerigaabo'
+]
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
