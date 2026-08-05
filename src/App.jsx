@@ -244,7 +244,51 @@ const myListings = listings.filter(
   if (!session) {
     return <Auth onLogin={(user) => setSession({ user })} />
   }
+if (showMyListings) {
+  return (
+    <div className="app">
+      <header className="header">
+        <h1>📦 Alaabtayda</h1>
 
+        <button
+          className="add-btn"
+          onClick={() => setShowMyListings(false)}
+        >
+          ← Dib ugu noqo
+        </button>
+      </header>
+
+      <div className="listings-grid">
+        {myListings.length === 0 ? (
+          <p>Weli wax alaab ah ma aadan soo gelin.</p>
+        ) : (
+          myListings.map((item) => (
+            <div key={item.id} className="listing-card">
+              {item.image_url && (
+                <img src={item.image_url} alt={item.title} />
+              )}
+
+              <h3>{item.title}</h3>
+
+              <p className="price">$ {item.price}</p>
+
+              <p className="listing-location">
+                📍 {item.city}
+              </p>
+
+              <button
+                className="add-btn"
+                onClick={() => handleDeleteListing(item.id)}
+              >
+                🗑️ Tirtir
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  )
+}
   if (selectedListing) {
     const item = selectedListing
     const cleanPhone = (item.seller_phone || '').replace(/[^0-9]/g, '')
