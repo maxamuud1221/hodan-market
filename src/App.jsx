@@ -367,7 +367,21 @@ function App() {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-          <input
+         <select
+  value={city}
+  onChange={(e) => setCity(e.target.value)}
+  required
+>
+  <option value="">📍 Dooro Magaalada</option>
+
+  {cities.map((c) => (
+    <option key={c} value={c}>
+      {c}
+    </option>
+  ))}
+</select>
+          
+        <input
             type="number"
             placeholder={t.price}
             value={price}
