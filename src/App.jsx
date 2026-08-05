@@ -186,6 +186,7 @@ function App() {
           price: parseFloat(price),
           description,
           category,
+          city,
           seller_name: sellerName,
           seller_phone: sellerPhone,
           image_url: imageUrl,
