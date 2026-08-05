@@ -200,6 +200,7 @@ function App() {
       setPrice('')
       setDescription('')
       setCategory('')
+      setCity('')
       setSellerPhone('')
       setImageFile(null)
       setShowForm(false)
