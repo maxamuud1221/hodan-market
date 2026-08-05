@@ -177,6 +177,107 @@ body{
 
 @media (max-width:768px){
 
+.app{
+    padding:10px;
+}
+
+.header{
+    flex-direction:column;
+    align-items:stretch;
+    padding:15px;
+    gap:10px;
+    position:relative;
+    top:0;
+}
+
+.header h1{
+    font-size:24px;
+    text-align:center;
+}
+
+.search-bar{
+    width:100%;
+    height:46px;
+}
+
+.header-actions{
+    width:100%;
+    display:flex;
+    gap:8px;
+}
+
+.add-btn{
+    flex:1;
+    padding:12px;
+    font-size:14px;
+}
+
+.category-filters{
+    gap:8px;
+    padding-bottom:5px;
+}
+
+.category-btn{
+    padding:10px 16px;
+    font-size:13px;
+}
+
+.hero{
+    padding:30px 18px;
+}
+
+.hero h2{
+    font-size:24px;
+}
+
+.hero p{
+    font-size:14px;
+}
+
+.hero-btn{
+    width:100%;
+}
+
+.listings-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.listing-card{
+    border-radius:16px;
+}
+
+.listing-card img{
+    height:140px;
+}
+
+.listing-card h3{
+    font-size:15px;
+    padding:10px;
+}
+
+.price{
+    font-size:18px;
+    padding:0 10px;
+}
+
+.listing-location,
+.listing-description,
+.seller{
+    padding:6px 10px;
+    font-size:12px;
+}
+
+.view-btn{
+    margin:10px;
+    width:calc(100% - 20px);
+    font-size:13px;
+    padding:10px;
+}
+
+}
+
 .header{
     flex-direction:column;
     align-items:stretch;
