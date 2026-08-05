@@ -95,7 +95,7 @@ function App() {
   const [selectedListing, setSelectedListing] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
-
+  const [showMyListings, setShowMyListings] = useState(false)
   const categoryKeys = ['Dhammaan', 'Baabuur', 'Moobiil', 'Guryo', 'Dharka', 'Kale']
   const cities = [
   'Muqdisho',
