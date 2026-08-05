@@ -26,8 +26,7 @@ body{
   padding:18px 24px;
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.08);
-  position:sticky;
-  top:15px;
+
   z-index:100;
   margin-bottom:25px;
 }
