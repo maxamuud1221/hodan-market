@@ -328,7 +328,17 @@ const myListings = listings.filter(
             <div className="user-dropdown">
               <p className="user-email">{session.user.email}</p>
               <button onClick={handleLogout} className="user-logout-btn">
+            <button
+  onClick={() => {
+    setShowMyListings(true)
+    setShowUserMenu(false)
+  }}
+  className="user-logout-btn"
+>
+  📦 Alaabtayda
+</button>
                 {t.logout}
+          
               </button>
             </div>
           )}
