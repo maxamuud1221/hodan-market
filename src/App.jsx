@@ -226,7 +226,9 @@ function App() {
     }
     setDeleting(false)
   }
-
+const myListings = listings.filter(
+  (item) => item.seller_name === session?.user?.email
+)
   const filteredListings = listings
     .filter((item) =>
       activeCategory === 'Dhammaan' ? true : item.category === activeCategory
