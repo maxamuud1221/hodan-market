@@ -443,7 +443,9 @@ function App() {
 
 <p className="price">$ {item.price}</p>
 
-<p className="listing-location">📍 Soomaaliya</p>
+<p className="listing-location">
+  📍 {item.city}
+</p>
 
 <p className="listing-description">
   {item.description.length > 70
